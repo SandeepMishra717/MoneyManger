@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -16,36 +17,44 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 //#JPA
-@Entity
-@Table(name="tbl_profiles")// if no table name then default name will be Entity(className)
-//lambok
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Entity // Marks this class as a JPA entity to be mapped to a database table
+@Table(name="tbl_profiles") // Specifies the table name in the database; default would be class name
+
+//lombok
+@Data // Generates getters, setters, toString, equals, and hashCode methods
+@AllArgsConstructor // Generates a constructor with all fields
+@NoArgsConstructor // Generates a no-argument constructor
+@Builder // Enables the builder pattern for object creation
+
 public class ProfileEntity {
-     
-	@Id
-	@GeneratedValue(strategy=Gene)
+
+	@Id // Marks this field as the primary key
+	@GeneratedValue(strategy=GenerationType.IDENTITY) // Auto-generates the primary key using DB identity column
 	private Long id;
+
 	private String fullName;
-	@Column(unique=true)
+
+	@Column(unique=true) // Ensures the 'email' column has unique values in the table
 	private String email;
+
 	private String password;
+
 	private String profileImageUrl;
-	@Column(updatable=false)  //dont't to update time of obj saved in db
-	@CreationTimestamp
+
+	@Column(updatable=false) // Prevents the value from being updated after the record is created
+	@CreationTimestamp // Automatically sets the timestamp when the entity is persisted
 	private LocalDateTime createdAt;
+
 	private LocalDateTime updatedAt;
+
 	private Boolean isActive;
+
 	private String activationTaken;
 
-//before saving obj into database we want to run this method so that isActive value null not store in db ,if user log in with email it true otherwise false
-@PrePersist
-public void prePersist() {
+	@PrePersist // Executes this method before the entity is persisted (saved) to the database. isActive=null shouldn't save in db . 
+	public void prePersist() {
 		if(this.isActive==null) {
-			isActive= false;
+			isActive = false;
 		}
 	}
-	
 }
