@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DashboardService {
+public class DashBoardService {
 
     private final IncomeService incomeService;
     private final ExpenseService expenseService;
